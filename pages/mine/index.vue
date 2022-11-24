@@ -30,7 +30,7 @@
     </view>
 
     <view class="content-section">
-      <view class="mine-actions grid col-4 text-center">
+      <!-- <view class="mine-actions grid col-4 text-center">
         <view class="action-item" @click="handleJiaoLiuQun">
           <view class="iconfont icon-friendfill text-pink icon"></view>
           <text class="text">交流群</text>
@@ -47,7 +47,7 @@
           <view class="iconfont icon-dianzan text-green icon"></view>
           <text class="text">点赞我们</text>
         </view>
-      </view>
+      </view> -->
 
       <view class="menu-list">
         <!-- <view class="list-cell list-cell-arrow" @click="handleToEditInfo">

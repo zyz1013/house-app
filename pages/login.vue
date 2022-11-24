@@ -69,9 +69,9 @@ export default {
       captchaEnabled: false,
       globalConfig: getApp().globalData.config,
       loginForm: {
-        username: "admin",
-        password: "admin123",
-        code: "123",
+        username: "",
+        password: "",
+        code: "",
         uuid: "",
       },
     };

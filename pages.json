@@ -10,7 +10,6 @@
       "path": "pages/index",
       "style": {
         "navigationBarTitleText": "房屋列表",
-        "navigationStyle": "custom",
         "enablePullDownRefresh": true
       }
     },

@@ -1,16 +1,16 @@
 <template>
   <view class="content">
-    <div class="search-bar">
+    <view class="search-bar">
       <uni-search-bar
         v-model="searchKey"
         placeholder="搜索房间号"
         clearButton="auto"
         cancelButton="none"
-        @confirm="handleSearch()"
-        @clear="resetSearch()"
+        @confirm="handleSearch(false)"
+        @clear="resetSearch"
       />
-    </div>
-    <div class="list" v-if="!loading">
+    </view>
+    <view class="list" v-if="!loading">
       <uni-list :border="true">
         <uni-list-chat
           v-for="item in list"
@@ -27,7 +27,10 @@
           :badge-text="item.houseType === 0 ? '空闲' : '已租'"
         >
           <template v-slot:default>
-            <span class="noneDay">退：{{ item.noneDay }}</span>
+            <span class="noneDay" v-if="item.noneDay"
+              >退：{{ item.noneDay }}</span
+            >
+            <span class="noneDay" v-else></span>
             <span>
               <uni-tag text="空闲" v-if="item.houseType === 0" />
               <uni-tag text="已租" type="success" v-else />
@@ -35,11 +38,11 @@
           </template>
         </uni-list-chat>
       </uni-list>
-    </div>
-    <div class="center" v-else>
-      <uni-icons type="spinner-cycle" size="30"></uni-icons>
-      <span>数据加载中...</span>
-    </div>
+    </view>
+    <view class="center" v-else>
+      <uni-icons type="spinner-cycle" size="18"></uni-icons>
+      <text>数据加载中...</text>
+    </view>
   </view>
 </template>
 
@@ -64,33 +67,18 @@ export default {
       if (!refresh) {
         this.loading = true;
       }
-      const data = await listHouse(query);
-      // let data = [];
-      // for (let i = 0; i < 100; i++) {
-      //   data.push({
-      //     houseNumber: `10` + i,
-      //     houseType: i % 2 === 0 ? 0 : 1,
-      //     price: 1000,
-      //     lessee: "张三",
-      //     noneDay: "2022-11-10",
-      //     contractId: i,
-      //   });
-      // }
-      // await new Promise((resolve) => {
-      //   setTimeout(() => {
-      //     resolve();
-      //   }, 1000);
-      // });
-      this.list = data;
+      const res = await listHouse(query);
+      this.list = res.data;
       this.loading = false;
       refresh && uni.stopPullDownRefresh();
     },
-    handleSearch(refresh) {
+    handleSearch(refresh = false) {
       this.getHouseList(refresh, {
         houseNumber: this.searchKey,
       });
     },
     resetSearch() {
+      this.searchKey = "";
       this.getHouseList(false, {
         houseNumber: this.searchKey,
       });
@@ -110,23 +98,21 @@ export default {
 </script>
 
 <style>
+page {
+  height: 100%;
+}
 .content {
-  /* height: calc(100vh - 50px - env(safe-area-inset-bottom)); */
-  /* display: flex;
+  height: 100%;
+  display: flex;
   flex-direction: column;
-  overflow: hidden; */
-  padding-top: 112rpx;
+  overflow: hidden;
 }
 .search-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 112rpx;
-  z-index: 99;
+  flex: none;
   background-color: #f1f1f1;
 }
 .list {
+  flex: auto;
   overflow-y: auto;
 }
 .noneDay {

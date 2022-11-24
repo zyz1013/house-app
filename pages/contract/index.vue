@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import { getContract } from "@/api/house/contract";
+
 export default {
   onLoad(option) {
     this.updateContract(option.contractId);
@@ -39,18 +41,8 @@ export default {
   methods: {
     async updateContract(id) {
       this.loading = true;
-      const data = await getContract(id);
-      // let data = {
-      //   rentTime: "2020-10-10",
-      //   exitTime: "2020-11-10",
-      //   rentMoney: 1000,
-      //   lessee: "张三",
-      //   phone: 150213111,
-      //   idCard: 3308811122101112,
-      //   payType: 1,
-      //   betType: 1,
-      // };
-      this.contractData = data;
+      const res = await getContract(id);
+      this.contractData = res.data;
       this.loading = false;
     },
   },

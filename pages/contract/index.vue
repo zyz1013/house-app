@@ -1,6 +1,6 @@
 <template>
   <view class="contract-container">
-    <div v-if="!loading">
+    <view v-if="!loading">
       <uni-list>
         <uni-list-item title="承租人" :rightText="contractData.lessee">
         </uni-list-item>
@@ -17,11 +17,11 @@
           :rightText="`付${contractData.payType}押${contractData.betType}`"
         />
       </uni-list>
-    </div>
-    <div class="center" v-else>
+    </view>
+    <view class="center" v-else>
       <uni-icons type="spinner-cycle" size="30"></uni-icons>
-      <span>合同加载中...</span>
-    </div>
+      <text>合同加载中...</text>
+    </view>
   </view>
 </template>
 

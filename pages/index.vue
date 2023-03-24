@@ -10,10 +10,59 @@
         @clear="resetSearch"
       />
     </view>
+    <scroll-view scroll-x="true" class="tags-group">
+      <view style="padding: 10px">
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === -1 ? 'success' : 'default'"
+          text="全部"
+          @click="setFilterType(-1)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 1 ? 'success' : 'default'"
+          text="空房可租"
+          @click="setFilterType(1)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 2 ? 'success' : 'default'"
+          text="在租中"
+          @click="setFilterType(2)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 3 ? 'success' : 'default'"
+          text="合同到期"
+          @click="setFilterType(3)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 4 ? 'success' : 'default'"
+          text="合同即将到期"
+          @click="setFilterType(4)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 5 ? 'success' : 'default'"
+          text="欠费"
+          @click="setFilterType(5)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 6 ? 'success' : 'default'"
+          text="待收费"
+          @click="setFilterType(6)"
+        />
+      </view>
+    </scroll-view>
+
     <view class="list" v-if="!loading">
       <uni-list :border="true">
         <uni-list-chat
+          :class="item.houseType === 0 ? 'empty-house' : 'living-house'"
           v-for="item in list"
+          :key="item.id"
           :clickable="item.houseType === 1"
           :title="item.houseNumber"
           :note="
@@ -27,14 +76,32 @@
           :badge-text="item.houseType === 0 ? '空闲' : '已租'"
         >
           <template v-slot:default>
-            <span class="noneDay" v-if="item.noneDay"
-              >退：{{ item.noneDay }}</span
+            <view class="noneDay" v-if="item.noneDay"
+              >退：{{ item.noneDay }}</view
             >
-            <span class="noneDay" v-else></span>
-            <span>
-              <uni-tag text="空闲" v-if="item.houseType === 0" />
-              <uni-tag text="已租" type="success" v-else />
-            </span>
+            <view class="noneDay" v-else></view>
+            <view>
+              <uni-tag
+                text="离"
+                type="primary"
+                v-if="item.houseChaox === 2"
+              ></uni-tag>
+              <uni-tag
+                text="结"
+                type="error"
+                v-if="item.houseChaox === 1"
+              ></uni-tag>
+              <uni-tag
+                text="欠"
+                type="error"
+                v-if="item.arrears === 1"
+              ></uni-tag>
+              <uni-tag
+                text="收"
+                type="warning"
+                v-if="item.waitArrears === 1"
+              ></uni-tag>
+            </view>
           </template>
         </uni-list-chat>
       </uni-list>
@@ -60,6 +127,7 @@ export default {
       loading: false,
       list: [],
       searchKey: "",
+      filterType: -1,
     };
   },
   methods: {
@@ -73,15 +141,30 @@ export default {
       refresh && uni.stopPullDownRefresh();
     },
     handleSearch(refresh = false) {
-      this.getHouseList(refresh, {
+      const houseType =
+        this.filterType === 1 ? 0 : this.filterType === 2 ? 1 : undefined;
+      const houseChaox =
+        this.filterType === 3 ? 1 : this.filterType === 4 ? 2 : undefined;
+      const arrears = this.filterType === 5 ? 1 : undefined;
+      const waitArrears = this.filterType === 6 ? 1 : undefined;
+      const params = {
         houseNumber: this.searchKey,
+        houseType,
+        houseChaox,
+        arrears,
+        waitArrears,
+      };
+      this.getHouseList(refresh, {
+        ...params,
       });
     },
     resetSearch() {
       this.searchKey = "";
-      this.getHouseList(false, {
-        houseNumber: this.searchKey,
-      });
+      this.handleSearch(false);
+    },
+    setFilterType(type) {
+      this.filterType = type;
+      this.handleSearch(false);
     },
     goToContractDetail(contractId) {
       if (contractId) {
@@ -97,7 +180,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 page {
   height: 100%;
 }
@@ -109,12 +192,40 @@ page {
 }
 .search-bar {
   flex: none;
-  background-color: #f1f1f1;
+  .uni-searchbar {
+    padding: 20rpx 20rpx 10rpx;
+  }
 }
+
+.tags-group {
+  white-space: nowrap;
+}
+.tag-filter:not(:last-child) {
+  margin-right: 10rpx;
+  .uni-tag {
+    padding: 12rpx 14rpx;
+  }
+}
+
 .list {
   flex: auto;
   overflow-y: auto;
 }
+.empty-house {
+  margin-bottom: 6rpx;
+  .uni-list-chat__container {
+    background-color: #feefef;
+    border-left: 3px solid #d72332;
+  }
+}
+.living-house {
+  margin-bottom: 6rpx;
+  .uni-list-chat__container {
+    background-color: #d1f2f2;
+    border-left: 3px solid #0aa;
+  }
+}
+
 .noneDay {
   font-size: 26rpx;
 }

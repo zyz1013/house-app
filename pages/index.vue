@@ -33,42 +33,54 @@
         <uni-tag
           class="tag-filter"
           :type="filterType === 3 ? 'success' : 'default'"
-          text="合同到期"
+          text="锁房"
           @click="setFilterType(3)"
         />
         <uni-tag
           class="tag-filter"
           :type="filterType === 4 ? 'success' : 'default'"
-          text="合同即将到期"
+          text="合同到期"
           @click="setFilterType(4)"
         />
         <uni-tag
           class="tag-filter"
           :type="filterType === 5 ? 'success' : 'default'"
-          text="欠费"
+          text="即将到期"
           @click="setFilterType(5)"
         />
         <uni-tag
           class="tag-filter"
           :type="filterType === 6 ? 'success' : 'default'"
-          text="待收费"
+          text="欠费"
           @click="setFilterType(6)"
+        />
+        <uni-tag
+          class="tag-filter"
+          :type="filterType === 7 ? 'success' : 'default'"
+          text="待收费"
+          @click="setFilterType(7)"
         />
       </view>
     </scroll-view>
 
-    <view class="list" v-if="!loading">
+    <view class="list" v-if="!loading && list.length > 0">
       <uni-list :border="true">
         <uni-list-chat
-          :class="item.houseType === 0 ? 'empty-house' : 'living-house'"
+          :class="
+            item.houseType === 0
+              ? 'empty-house'
+              : item.houseType === 1
+              ? 'living-house'
+              : 'locked-house'
+          "
           v-for="item in list"
           :key="item.id"
           :clickable="item.houseType === 1"
           :title="item.houseNumber"
           :note="
-            item.houseType === 0
-              ? '暂未定价'
-              : `${item.lessee}   ${item.price}元/月`
+            item.houseType === 1
+              ? `${item.lessee}   ${item.price}元/月`
+              : '暂未定价'
           "
           :avatar="avatar"
           @click="goToContractDetail(item.contractId)"
@@ -76,10 +88,15 @@
           :badge-text="item.houseType === 0 ? '空闲' : '已租'"
         >
           <template v-slot:default>
+            <uni-icons
+              type="locked-filled"
+              size="28"
+              v-if="item.houseType === 2"
+            ></uni-icons>
             <view class="noneDay" v-if="item.noneDay"
               >退：{{ item.noneDay }}</view
             >
-            <view class="noneDay" v-else></view>
+            <view class="noneDay" v-if="!item.noneDay"></view>
             <view>
               <uni-tag
                 text="离"
@@ -106,9 +123,12 @@
         </uni-list-chat>
       </uni-list>
     </view>
-    <view class="center" v-else>
+    <view class="center" v-if="loading">
       <uni-icons type="spinner-cycle" size="18"></uni-icons>
       <text>数据加载中...</text>
+    </view>
+    <view class="center" v-if="list.length === 0 && !loading">
+      <text>没有更多房源了</text>
     </view>
   </view>
 </template>
@@ -142,11 +162,17 @@ export default {
     },
     handleSearch(refresh = false) {
       const houseType =
-        this.filterType === 1 ? 0 : this.filterType === 2 ? 1 : undefined;
+        this.filterType === 1
+          ? 0
+          : this.filterType === 2
+          ? 1
+          : this.filterType === 3
+          ? 2
+          : undefined;
       const houseChaox =
-        this.filterType === 3 ? 1 : this.filterType === 4 ? 2 : undefined;
-      const arrears = this.filterType === 5 ? 1 : undefined;
-      const waitArrears = this.filterType === 6 ? 1 : undefined;
+        this.filterType === 4 ? 1 : this.filterType === 5 ? 2 : undefined;
+      const arrears = this.filterType === 6 ? 1 : undefined;
+      const waitArrears = this.filterType === 7 ? 1 : undefined;
       const params = {
         houseNumber: this.searchKey,
         houseType,
@@ -223,6 +249,14 @@ page {
   .uni-list-chat__container {
     background-color: #d1f2f2;
     border-left: 3px solid #0aa;
+  }
+}
+
+.locked-house {
+  margin-bottom: 6rpx;
+  .uni-list-chat__container {
+    background-color: #f2f4f7;
+    border-left: 3px solid #969daa;
   }
 }
 

@@ -97,7 +97,7 @@
               >退：{{ item.noneDay }}</view
             >
             <view class="noneDay" v-if="!item.noneDay"></view>
-            <view>
+            <view class="listItem-tag-group">
               <uni-tag
                 text="离"
                 type="primary"
@@ -263,6 +263,11 @@ page {
 .noneDay {
   font-size: 26rpx;
 }
+.listItem-tag-group {
+  display: flex;
+  gap: 8rpx;
+}
+
 .center {
   height: 200rpx;
   display: flex;

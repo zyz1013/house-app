@@ -130,6 +130,7 @@
         </uni-list-chat>
       </uni-list>
     </view>
+    <view class="totalNum">{{ list.length }} 间</view>
     <view class="center" v-if="loading">
       <uni-icons type="spinner-cycle" size="18"></uni-icons>
       <text>数据加载中...</text>
@@ -313,6 +314,7 @@ page {
   font-size: 26rpx;
   color: #999;
 }
+
 .listItem-tag-group {
   display: flex;
   uni-tag {
@@ -322,6 +324,20 @@ page {
       padding: 4rpx 6rpx;
     }
   }
+}
+
+.totalNum {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 4px;
+  background: #000;
+  opacity: 0.5;
+  color: #fff;
+  font-size: 12px;
+  padding: 2px 8px;
+  z-index: 9999;
 }
 
 .center {

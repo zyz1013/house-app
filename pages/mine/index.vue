@@ -4,7 +4,7 @@
     <view class="header-section">
       <view class="flex padding justify-between">
         <view class="flex align-center">
-          <view v-if="!avatar" class="cu-avatar xl round bg-white">
+          <!-- <view v-if="!avatar" class="cu-avatar xl round bg-white">
             <view class="iconfont icon-people text-gray icon"></view>
           </view>
           <image
@@ -14,7 +14,7 @@
             class="cu-avatar xl round"
             mode="widthFix"
           >
-          </image>
+          </image> -->
           <view v-if="!name" @click="handleToLogin" class="login-tip">
             点击登录
           </view>

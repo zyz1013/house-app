@@ -11,7 +11,7 @@ const config = {
   // 应用信息
   appInfo: {
     // 应用名称
-    name: "低碳水稻",
+    name: "包租公",
     // 应用版本
     version: "1.0.0",
     // 应用logo

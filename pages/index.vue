@@ -10,59 +10,65 @@
         @clear="resetSearch"
       />
     </view>
-    <scroll-view scroll-x="true" class="tags-group">
-      <view style="padding: 10px">
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === -1 ? 'success' : 'default'"
-          text="全部"
-          @click="setFilterType(-1)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 1 ? 'success' : 'default'"
-          text="空房可租"
-          @click="setFilterType(1)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 2 ? 'success' : 'default'"
-          text="在租中"
-          @click="setFilterType(2)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 3 ? 'success' : 'default'"
-          text="锁房"
-          @click="setFilterType(3)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 4 ? 'success' : 'default'"
-          text="合同到期"
-          @click="setFilterType(4)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 5 ? 'success' : 'default'"
-          text="即将到期"
-          @click="setFilterType(5)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 6 ? 'success' : 'default'"
-          text="欠费"
-          @click="setFilterType(6)"
-        />
-        <uni-tag
-          class="tag-filter"
-          :type="filterType === 7 ? 'success' : 'default'"
-          text="待收费"
-          @click="setFilterType(7)"
-        />
+    <scroll-view scroll-x="true" class="filter-items">
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === -1 }"
+        @click="setFilterType(-1)"
+      >
+        <text>全部</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 1 }"
+        @click="setFilterType(1)"
+      >
+        <text>空房可租</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 2 }"
+        @click="setFilterType(2)"
+      >
+        <text>在租中</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 3 }"
+        @click="setFilterType(3)"
+      >
+        <text>锁房</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 4 }"
+        @click="setFilterType(4)"
+      >
+        <text>合同到期</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 5 }"
+        @click="setFilterType(5)"
+      >
+        <text>即将到期</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 6 }"
+        @click="setFilterType(6)"
+      >
+        <text>欠费</text>
+      </view>
+      <view
+        class="filter-tag"
+        :class="{ active: filterType === 7 }"
+        @click="setFilterType(7)"
+      >
+        <text>待收费</text>
       </view>
     </scroll-view>
-
+    <view class="divider"></view>
     <view class="list" v-if="!loading && list.length > 0">
       <uni-list :border="true">
         <uni-list-chat
@@ -73,6 +79,7 @@
               ? 'living-house'
               : 'locked-house'
           "
+          class="house"
           v-for="item in list"
           :key="item.id"
           :clickable="item.houseType === 1"
@@ -209,63 +216,112 @@ export default {
 <style lang="scss">
 page {
   height: 100%;
+  background-color: #fff;
 }
 .content {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  position: relative;
+  margin: 0 20rpx;
 }
 .search-bar {
   flex: none;
   .uni-searchbar {
-    padding: 20rpx 20rpx 10rpx;
+    padding: 20rpx 0 10rpx;
+    .uni-searchbar__box {
+      background-color: #f7f7f7 !important;
+    }
   }
 }
 
-.tags-group {
+.filter-items {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background-color: #fff;
+  padding: 20rpx 0;
   white-space: nowrap;
+  .filter-tag {
+    min-width: 100rpx;
+    padding: 8rpx 14rpx;
+    color: #666;
+    border-radius: 6rpx;
+    background-color: #f7f7f7;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    &:not(:last-child) {
+      margin-right: 20rpx;
+    }
+    text {
+      font-size: 12px;
+      font-weight: normal;
+    }
+    &.active {
+      background-color: rgba(120, 164, 244, 0.2);
+      color: #78a4f4;
+    }
+  }
 }
-.tag-filter:not(:last-child) {
-  margin-right: 10rpx;
-  .uni-tag {
-    padding: 12rpx 14rpx;
+.divider {
+  width: 100%;
+  margin-bottom: 20rpx;
+  height: 1px;
+  background-color: rgba(5, 5, 5, 0.06);
+}
+.list {
+  margin: 0;
+  .uni-list--border:after {
+    display: none;
+  }
+  .uni-list--border-top {
+    display: none;
+  }
+}
+.house {
+  margin-bottom: 16rpx;
+  .uni-list-chat__container {
+    border-radius: 30rpx;
   }
 }
 
-.list {
-  flex: auto;
-  overflow-y: auto;
-}
 .empty-house {
-  margin-bottom: 6rpx;
   .uni-list-chat__container {
     background-color: #feefef;
     border-left: 3px solid #d72332;
+    border-bottom: 1px solid rgba(215, 35, 50, 0.3);
   }
 }
 .living-house {
-  margin-bottom: 6rpx;
   .uni-list-chat__container {
     background-color: #d1f2f2;
     border-left: 3px solid #0aa;
+    border-bottom: 1px solid rgba(0, 170, 170, 0.3);
   }
 }
 
 .locked-house {
-  margin-bottom: 6rpx;
   .uni-list-chat__container {
     background-color: #f2f4f7;
     border-left: 3px solid #969daa;
+    border-bottom: 1px solid rgba(150, 157, 170, 0.3);
   }
 }
 
 .noneDay {
   font-size: 26rpx;
+  color: #999;
 }
 .listItem-tag-group {
   display: flex;
-  gap: 8rpx;
+  uni-tag {
+    transform: scale(0.8);
+    .uni-tag {
+      font-size: 13px;
+      padding: 4rpx 6rpx;
+    }
+  }
 }
 
 .center {
